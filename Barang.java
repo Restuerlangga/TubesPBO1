@@ -15,9 +15,9 @@ public class Barang {
         this.hargaSewa = hargaSewa;
     }
 
-    public boolean kurangiStok(int qty) {
-        if (this.stok >= qty) {
-            this.stok -= qty;
+    public boolean kurangiStok(int jumlah ) {
+        if (this.stok >= jumlah) {
+            this.stok -= jumlah;
             return true;
         }
         return false;
