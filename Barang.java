@@ -1,19 +1,37 @@
 public class Barang {
+    private int id;
     private String kodeBarang;
     private String namaBarang;
     private String kategori;
     private int stok;
-    private double biaya;
+    private double hargaSewa;
 
-    public Barang(String kodeBarang, String namaBarang, String kategori, int stok, double biaya) {
+    public Barang(int id, String kodeBarang, String namaBarang, String kategori, int stok, double hargaSewa) {
+        this.id = id;
         this.kodeBarang = kodeBarang;
         this.namaBarang = namaBarang;
         this.kategori = kategori;
         this.stok = stok;
-        this.biaya = biaya;
+        this.hargaSewa = hargaSewa;
     }
 
-  
+    public boolean kurangiStok(int qty) {
+        if (this.stok >= qty) {
+            this.stok -= qty;
+            return true;
+        }
+        return false;
+
+    }
+
+    public void tambahStok(int qty) {
+        this.stok += qty;
+    }
+
+    public int getid() {
+        return id;
+    }
+
     public String getKodeBarang() {
         return kodeBarang;
     }
@@ -22,30 +40,17 @@ public class Barang {
         return namaBarang;
     }
 
-    public String getKategori() {
-        return kategori;
-    }
-
     public int getStok() {
         return stok;
     }
-    public double getBiaya() {
-        return biaya;
+
+    public double getHargaSewa() {
+        return hargaSewa;
     }
 
-    public void setNamaBarang(String namaBarang) { 
-        this.namaBarang = namaBarang; 
+    @Override
+    public String toString() {
+        return String.format("[%s] %-20s | Stok: %d | Rp %,.0f/hari", kodeBarang, namaBarang, stok, hargaSewa);
     }
 
-    public void setKategori(String kategori) { 
-        this.kategori = kategori; 
-    }
-    
-    public void setStok(int stok) { 
-        this.stok = stok; 
-    }
-
-    public void setBiaya(double biaya) { 
-        this.biaya = biaya; 
-    }
 }
