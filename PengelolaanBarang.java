@@ -1,6 +1,6 @@
-public  interface PengelolaanBarang {
-    void tambahBarang(Barang b);
+public interface PengelolaanBarang {
+    void tambahBarang(Barang barang);
     void hapusBarang(String kodeBarang);
-    void updateBarang(String kodeBarang, Barang b);
-
+    void updateBarang(Barang barang);
+    void lihatSemuaBarang();
 }
