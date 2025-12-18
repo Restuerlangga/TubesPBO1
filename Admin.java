@@ -35,10 +35,15 @@ public class Admin extends Akun implements PengelolaanBarang {
                 return;
             }
         }
+        System.out.println("Barang tidak ditemukan.");
     }
 
     @Override
     public void lihatSemuaBarang() {
+        if (daftarBarang.isEmpty()) {
+            System.out.println("Belum ada barang.");
+            return;
+        }
         for (Barang b : daftarBarang) {
             System.out.println(b);
         }

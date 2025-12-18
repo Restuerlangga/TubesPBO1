@@ -30,7 +30,9 @@ public class User extends Akun {
     }
 
     public Transaksi buatTransaksi(String idTransaksi) {
-        String tanggalPinjam = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        String tanggalPinjam = new SimpleDateFormat("yyyy-MM-dd")
+                .format(new Date());
+
         Transaksi transaksi = new Transaksi(idTransaksi, this, tanggalPinjam);
         riwayatTransaksi.add(transaksi);
         return transaksi;
