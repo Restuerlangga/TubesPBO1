@@ -87,10 +87,15 @@ public class User extends Akun implements Pembayaran {
             try { if (conn != null) conn.rollback(); } catch (SQLException ex) {}
             System.out.println("Transaksi Gagal: " + e.getMessage());
         }
+
+        
     }
 
     @Override
     public void prosesPembayaran(double total) {
         System.out.println("Pembayaran sebesar Rp " + total + " telah dicatat sistem.");
     }
+
+    
 }
+
