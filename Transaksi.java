@@ -1,23 +1,40 @@
-
+import java.util.ArrayList;
 
 public class Transaksi {
-    private String idTransaksi;
+    // Hapus atribut idTransaksi manual, karena nanti digenerate database (Auto Increment)
     private User user;
-    private String tanggalPinjam;
     private String tanggalKembali;
+    
+    // Tambahkan Keranjang Belanja
+    private ArrayList<TransaksiDetail> listDetail;
 
-    public Transaksi(String idTransaksi, User user, String tanggalPinjam) {
-        this.idTransaksi = idTransaksi;
+    public Transaksi(User user) {
         this.user = user;
-        this.tanggalPinjam = tanggalPinjam;
+        this.listDetail = new ArrayList<>();
     }
 
-    public String getIdTransaksi() { return idTransaksi; }
-    public User getUser() { return user; }
-    public String getTanggalPinjam() { return tanggalPinjam; }
-    public String TanggalKembali() { return tanggalKembali; }
+    public void tambahItem(Barang b, int qty) {
+        TransaksiDetail detail = new TransaksiDetail(b, qty);
+        listDetail.add(detail);
+    }
 
-    public void setTanggalKembali(String tanggalKembali) {
-        this.tanggalKembali = tanggalKembali;
+    public ArrayList<TransaksiDetail> getListDetail() {
+        return listDetail;
+    }
+
+    public double hitungTotal() {
+        double total = 0;
+        for (TransaksiDetail d : listDetail) {
+            total += d.getSubtotal();
+        }
+        return total;
+    }
+
+    public void setTanggalKembali(String tgl) {
+        this.tanggalKembali = tgl;
+    }
+    
+    public String TanggalKembali() {
+        return tanggalKembali;
     }
 }
