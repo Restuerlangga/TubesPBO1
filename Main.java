@@ -163,52 +163,61 @@ public class Main {
 
         if (pil.equals("1")) {
             Transaksi trx = new Transaksi(usr);
+
+            // ===== LOOP PILIH BARANG =====
             while (true) {
-                // Tampilkan barang user
-                for (Barang b : usr.lihatBarang())
+                 // Tampilkan barang user
+                for (Barang b : usr.lihatBarang()) {
                     System.out.println(b);
+                }
 
                 System.out.print("Masukkan Kode Barang (ketik 'bayar' selesai): ");
                 String kode = input.nextLine();
-                if (kode.equalsIgnoreCase("bayar"))
-                    break;
+
+                if (kode.equalsIgnoreCase("bayar")) {
+                    break; // keluar loop pilih barang
+                }
 
                 Barang pilih = null;
-                for (Barang b : usr.lihatBarang())
-                    if (b.getKodeBarang().equalsIgnoreCase(kode))
+                for (Barang b : usr.lihatBarang()) {
+                    if (b.getKodeBarang().equalsIgnoreCase(kode)) {
                         pilih = b;
+                        break;
+                    }
+                }
 
                 if (pilih != null) {
                     System.out.print("Jumlah: ");
                     int qty = Integer.parseInt(input.nextLine());
+
                     if (qty <= pilih.getStok()) {
                         trx.tambahItem(pilih, qty);
                         System.out.println("Masuk keranjang.");
-                    } else
+                    } else {
                         System.out.println("Stok kurang.");
-                } else
-                    System.out.println("Barang tidak ada.");
-
-                if (!trx.getListDetail().isEmpty()) {
-
-                    System.out.println("\n--- DETAIL TRANSAKSI ---");
-                    for (TransaksiDetail item : trx.getListDetail()) {
-                        System.out.println(item); // PANGGIL toString()
                     }
-                    System.out.println("-------------------------");
-                    System.out.printf("TOTAL             Rp %,.0f\n", trx.hitungTotal());
-
-                    System.out.print("\nTanggal Kembali (YYYY-MM-DD): ");
-                    trx.setTanggalKembali(input.nextLine());
-                    usr.checkout(trx);
+                } else {
+                    System.out.println("Barang tidak ada.");
                 }
             }
 
+            // ===== CHECKOUT (HANYA SEKALI) =====
             if (!trx.getListDetail().isEmpty()) {
-                System.out.print("Tanggal Kembali (YYYY-MM-DD): ");
+
+                System.out.println("\n--- DETAIL TRANSAKSI ---");
+                for (TransaksiDetail item : trx.getListDetail()) {
+                    System.out.println(item); // toString() kepanggil
+                }
+                System.out.println("-------------------------");
+                System.out.printf("TOTAL             Rp %,.0f\n", trx.hitungTotal());
+
+                System.out.print("\nTanggal Kembali (YYYY-MM-DD): ");
                 trx.setTanggalKembali(input.nextLine());
+
                 usr.checkout(trx);
+                return; //  PENTING: stop menuUser setelah checkout
             }
+
         } else if (pil.equals("0")) {
             akunAktif.logout();
             akunAktif = null;
