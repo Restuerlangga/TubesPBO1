@@ -157,7 +157,9 @@ public class Main {
 
     private static void menuUser() {
         User usr = (User) akunAktif;
-        System.out.println("\n1. Belanja / Pinjam\n0. Logout");
+        System.out.println("\n1. Belanja / Pinjam");
+        System.out.println("2. Kembalikan Barang");
+        System.out.println("0. Logout");
         System.out.print("Pilih: ");
         String pil = input.nextLine();
 
@@ -166,7 +168,7 @@ public class Main {
 
             // ===== LOOP PILIH BARANG =====
             while (true) {
-                 // Tampilkan barang user
+                // Tampilkan barang user
                 for (Barang b : usr.lihatBarang()) {
                     System.out.println(b);
                 }
@@ -215,12 +217,90 @@ public class Main {
                 trx.setTanggalKembali(input.nextLine());
 
                 usr.checkout(trx);
-                return; //  PENTING: stop menuUser setelah checkout
+                return; // PENTING: stop menuUser setelah checkout
             }
 
+        } else if (pil.equals("2")) {
+            kembalikanBarang(usr);
+            return;
         } else if (pil.equals("0")) {
             akunAktif.logout();
             akunAktif = null;
         }
     }
+
+    private static void kembalikanBarang(User usr) {
+        try (Connection conn = DatabaseConnection.getConnection()) {
+
+            // 1. Tampilkan transaksi yang masih DIPINJAM oleh user
+            String sqlTrx = """
+                        SELECT id, tanggal_pinjam, tanggal_kembali, total_biaya
+                        FROM transaksi
+                        WHERE id_user = ? AND status = 'DIPINJAM'
+                    """;
+
+            PreparedStatement ps = conn.prepareStatement(sqlTrx);
+            ps.setInt(1, usr.getId());
+            ResultSet rs = ps.executeQuery();
+
+            System.out.println("\n--- TRANSAKSI YANG SEDANG DIPINJAM ---");
+
+            boolean ada = false;
+            while (rs.next()) {
+                ada = true;
+                System.out.printf(
+                        "ID: %d | Pinjam: %s | Kembali: %s | Total: Rp %,.0f%n",
+                        rs.getInt("id"),
+                        rs.getString("tanggal_pinjam"),
+                        rs.getString("tanggal_kembali"),
+                        rs.getDouble("total_biaya"));
+            }
+
+            if (!ada) {
+                System.out.println("Tidak ada transaksi yang sedang dipinjam.");
+                return;
+            }
+
+            // 2. Pilih transaksi yang dikembalikan
+            System.out.print("\nMasukkan ID Transaksi yang akan dikembalikan: ");
+            int idTrx = Integer.parseInt(input.nextLine());
+
+            conn.setAutoCommit(false); // transaksi DB
+
+            // 3. Ambil detail transaksi
+            String sqlDetail = """
+                        SELECT id_barang, qty
+                        FROM transaksi_detail
+                        WHERE id_transaksi = ?
+                    """;
+
+            ps = conn.prepareStatement(sqlDetail);
+            ps.setInt(1, idTrx);
+            rs = ps.executeQuery();
+
+            // 4. Tambah stok barang kembali
+            String sqlUpdateStok = "UPDATE barang SET stok = stok + ? WHERE id = ?";
+            PreparedStatement psStok = conn.prepareStatement(sqlUpdateStok);
+
+            while (rs.next()) {
+                psStok.setInt(1, rs.getInt("qty"));
+                psStok.setInt(2, rs.getInt("id_barang"));
+                psStok.executeUpdate();
+            }
+
+            // 5. Update status transaksi
+            String sqlUpdateTrx = "UPDATE transaksi SET status = 'DIKEMBALIKAN' WHERE id = ?";
+            ps = conn.prepareStatement(sqlUpdateTrx);
+            ps.setInt(1, idTrx);
+            ps.executeUpdate();
+
+            conn.commit();
+
+            System.out.println("\nBarang berhasil dikembalikan. Terima kasih 🙏");
+
+        } catch (Exception e) {
+            System.out.println("Gagal mengembalikan barang: " + e.getMessage());
+        }
+    }
+
 }
