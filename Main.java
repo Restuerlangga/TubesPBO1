@@ -122,7 +122,7 @@ public class Main {
 
     private static void menuAdmin() {
         Admin adm = (Admin) akunAktif;
-        System.out.println("\n1. Tambah Barang\n2. Hapus Barang\n3. Update Barang\n0. Logout");
+        System.out.println("\n1. Tambah Barang\n2. Hapus Barang\n3. Update Barang\n4. Lihat Laporan\n0. Logout");
         System.out.print("Pilih: ");
         String pil = input.nextLine();
 
@@ -149,6 +149,8 @@ public class Main {
             System.out.print("Harga Baru: ");
             double h = Double.parseDouble(input.nextLine());
             adm.updateBarang(new Barang(0, k, n, "Umum", s, h));
+        } else if (pil.equals("4")) {
+            adm.lihatSemuaLaporan();
         } else if (pil.equals("0")) {
             akunAktif.logout();
             akunAktif = null;
@@ -159,6 +161,7 @@ public class Main {
         User usr = (User) akunAktif;
         System.out.println("\n1. Belanja / Pinjam");
         System.out.println("2. Kembalikan Barang");
+        System.out.println("3. Lihat Riwayat");
         System.out.println("0. Logout");
         System.out.print("Pilih: ");
         String pil = input.nextLine();
@@ -222,6 +225,9 @@ public class Main {
 
         } else if (pil.equals("2")) {
             kembalikanBarang(usr);
+            return;
+        } else if (pil.equals("3")) {
+            usr.lihatRiwayat();
             return;
         } else if (pil.equals("0")) {
             akunAktif.logout();

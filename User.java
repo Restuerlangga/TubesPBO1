@@ -91,6 +91,41 @@ public class User extends Akun implements Pembayaran {
         
     }
 
+    public void lihatRiwayat() {
+        System.out.println("\n--- RIWAYAT TRANSAKSI SAYA ---");
+        String sql = "SELECT * FROM transaksi WHERE id_user = ? ORDER BY id DESC";
+        
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setInt(1, this.id); // Filter berdasarkan ID saya sendiri
+            ResultSet rs = ps.executeQuery();
+            
+            System.out.printf("| %-5s | %-12s | %-12s | %-15s | %-12s |\n", 
+                "ID", "Tgl Pinjam", "Tgl Kembali", "Total Biaya", "Status");
+            System.out.println("--------------------------------------------------------------------------");
+
+            boolean adaData = false;
+            while(rs.next()) {
+                adaData = true;
+                System.out.printf("| %-5d | %-12s | %-12s | Rp %-12s | %-12s |\n", 
+                    rs.getInt("id"),
+                    rs.getDate("tanggal_pinjam"),
+                    rs.getDate("tanggal_kembali"),
+                    String.format("%,.0f", rs.getDouble("total_biaya")),
+                    rs.getString("status"));
+            }
+            
+            if (!adaData) {
+                System.out.println("   (Belum ada riwayat transaksi)");
+            }
+            System.out.println("--------------------------------------------------------------------------");
+
+        } catch (SQLException e) {
+            System.out.println("Gagal ambil riwayat: " + e.getMessage());
+        }
+    }
+
     @Override
     public void prosesPembayaran(double total) {
         System.out.println("Pembayaran sebesar Rp " + total + " telah dicatat sistem.");

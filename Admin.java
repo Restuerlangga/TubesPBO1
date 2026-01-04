@@ -59,6 +59,36 @@ public class Admin extends Akun implements PengelolaanBarang {
         }
     }
 
+    public void lihatSemuaLaporan() {
+        System.out.println("\n--- LAPORAN SEMUA TRANSAKSI (ADMIN) ---");
+        // Kita JOIN supaya nama peminjamnya muncul
+        String sql = "SELECT t.id, u.nama, t.tanggal_pinjam, t.total_biaya, t.status " +
+                     "FROM transaksi t " +
+                     "JOIN user u ON t.id_user = u.id " +
+                     "ORDER BY t.id DESC";
+        
+        try (Connection conn = DatabaseConnection.getConnection();
+             ResultSet rs = conn.createStatement().executeQuery(sql)) {
+            
+            System.out.printf("| %-5s | %-15s | %-12s | %-15s | %-12s |\n", 
+                "ID", "Peminjam", "Tgl Pinjam", "Total", "Status");
+            System.out.println("---------------------------------------------------------------------------");
+
+            while(rs.next()) {
+                System.out.printf("| %-5d | %-15s | %-12s | Rp %-12s | %-12s |\n", 
+                    rs.getInt("id"),
+                    rs.getString("nama"),
+                    rs.getDate("tanggal_pinjam"),
+                    String.format("%,.0f", rs.getDouble("total_biaya")),
+                    rs.getString("status"));
+            }
+            System.out.println("---------------------------------------------------------------------------");
+
+        } catch (SQLException e) {
+            System.out.println("Error load laporan: " + e.getMessage());
+        }
+    }
+
     @Override
     public void lihatSemuaBarang() {
         // Fitur ini sama dengan user, select * from barang
