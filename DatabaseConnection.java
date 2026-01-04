@@ -5,7 +5,7 @@ import java.sql.SQLException;
 public class DatabaseConnection {
     
     // Sesuaikan konfigurasi database Anda
-    private static final String URL = "jdbc:mysql://localhost:3306/db_inventaris_pbo";
+    private static final String URL = "jdbc:mysql://localhost:3307db_inventaris_pbo";
     private static final String USER = "root";
     private static final String PASSWORD = "";
 
