@@ -15,42 +15,25 @@ public class Barang {
         this.hargaSewa = hargaSewa;
     }
 
-    public boolean kurangiStok(int jumlah ) {
-        if (this.stok >= jumlah) {
-            this.stok -= jumlah;
-            return true;
-        }
-        return false;
-
+    
+    public Barang(String kodeBarang, String namaBarang, String kategori, int stok, double hargaSewa) {
+        this.id = 0;
+        this.kodeBarang = kodeBarang;
+        this.namaBarang = namaBarang;
+        this.kategori = kategori;
+        this.stok = stok;
+        this.hargaSewa = hargaSewa;
     }
 
-    public void tambahStok(int qty) {
-        this.stok += qty;
-    }
-
-    public int getid() {
-        return id;
-    }
-
-    public String getKodeBarang() {
-        return kodeBarang;
-    }
-
-    public String getNamaBarang() {
-        return namaBarang;
-    }
-
-    public int getStok() {
-        return stok;
-    }
-
-    public double getHargaSewa() {
-        return hargaSewa;
-    }
+    // Method Getter
+    public int getid() { return id; }
+    public String getKodeBarang() { return kodeBarang; }
+    public String getNamaBarang() { return namaBarang; }
+    public int getStok() { return stok; }
+    public double getHargaSewa() { return hargaSewa; }
 
     @Override
     public String toString() {
         return String.format("[%s] %-20s | Stok: %d | Rp %,.0f/hari", kodeBarang, namaBarang, stok, hargaSewa);
     }
-
 }
